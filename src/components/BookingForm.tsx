@@ -17,6 +17,36 @@ interface FormData {
   descripcion: string;
 }
 
+const INTERNAL_EMAIL = "agenda@inkforge.fake";
+const EMAIL_ENDPOINT = `https://formsubmit.co/ajax/${encodeURIComponent(INTERNAL_EMAIL)}`;
+
+const buildEmailPayload = (data: FormData) => ({
+  nombre: data.nombre,
+  telefono: data.telefono,
+  email: data.email || "Sin email",
+  fecha: data.fecha || "Pendiente",
+  horaInicio: data.horaInicio,
+  horaFin: data.horaFin,
+  descripcion: data.descripcion,
+  _subject: `Nueva reserva de ${data.nombre}`,
+  _template: "table",
+});
+
+const sendReservationEmail = async (data: FormData) => {
+  const response = await fetch(EMAIL_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(buildEmailPayload(data)),
+  });
+
+  if (!response.ok) {
+    throw new Error("Email request failed");
+  }
+};
+
 const initialFormState: FormData = {
   nombre: "",
   email: "",
@@ -57,6 +87,16 @@ export const BookingForm = () => {
     return newErrors;
   };
 
+  const notifyInternalTeam = async (payload: FormData) => {
+    try {
+      await sendReservationEmail(payload);
+      return true;
+    } catch (error) {
+      console.error("No se pudo enviar el correo interno", error);
+      return false;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validate();
@@ -65,22 +105,38 @@ export const BookingForm = () => {
     if (Object.keys(validationErrors).length > 0) return;
 
     setIsSubmitting(true);
+    const payload = { ...form };
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const reservas = JSON.parse(localStorage.getItem("reservas_tattoo") || "[]");
-    reservas.unshift({ ...form, createdAt: new Date().toISOString() });
-    localStorage.setItem("reservas_tattoo", JSON.stringify(reservas));
-    window.dispatchEvent(new Event("reservas:update"));
+      const reservas = JSON.parse(localStorage.getItem("reservas_tattoo") || "[]");
+      reservas.unshift({ ...payload, createdAt: new Date().toISOString() });
+      localStorage.setItem("reservas_tattoo", JSON.stringify(reservas));
+      window.dispatchEvent(new Event("reservas:update"));
 
-    toast({
-      title: "¡Reserva recibida!",
-      description: "Te contactaremos pronto por teléfono o WhatsApp.",
-    });
+      const emailDelivered = await notifyInternalTeam(payload);
 
-    setForm(initialFormState);
-    setIsSubmitting(false);
+      toast({
+        title: emailDelivered ? "¡Reserva recibida!" : "Reserva guardada",
+        description: emailDelivered
+          ? `Te contactaremos pronto. Avisamos al estudio en ${INTERNAL_EMAIL}.`
+          : "Registramos tu solicitud, pero no pudimos enviar el correo interno. Revisaremos la agenda manualmente.",
+        variant: emailDelivered ? undefined : "destructive",
+      });
+
+      setForm(initialFormState);
+    } catch (error) {
+      console.error("Error al registrar la reserva", error);
+      toast({
+        title: "No pudimos registrar tu reserva",
+        description: "Inténtalo nuevamente en unos minutos o contáctanos por WhatsApp.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const whatsappUrl = `https://wa.me/34123456789?text=${encodeURIComponent(
