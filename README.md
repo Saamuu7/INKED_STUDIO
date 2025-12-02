@@ -1,73 +1,89 @@
-# Welcome to your Lovable project
+🐍 INKED_STUDIO — Sitio Web para Estudio de Tatuajes
 
-## Project info
+Este repositorio contiene INKED_STUDIO, un sitio web profesional desarrollado para representar la imagen, estilo y servicios de un estudio de tatuajes. El proyecto está completamente finalizado y listo para ser entregado, instalado o desplegado en el hosting del cliente.
 
-**URL**: https://lovable.dev/projects/5c37b46a-58bf-4c8a-a8fb-f407cf452e4c
 
-## How can I edit this code?
+🧾 Descripción del proyecto
 
-There are several ways of editing your application.
+El sitio web está diseñado para ofrecer una experiencia visual potente, moderna y enfocada en transmitir la esencia artística del estudio. Incluye:
 
-**Use Lovable**
+Página principal con presentación del estudio y su identidad visual
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/5c37b46a-58bf-4c8a-a8fb-f407cf452e4c) and start prompting.
+Sección de estilos y servicios (realismo, blackwork, minimalista, etc.)
 
-Changes made via Lovable will be committed automatically to this repo.
+Galería profesional con trabajos del tatuador o el equipo
 
-**Use your preferred IDE**
+Información esencial: horarios, ubicación, contacto y redes sociales
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Diseño responsive, adaptado a móviles, tablets y ordenadores
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+El objetivo del proyecto es proporcionar una página atractiva, rápida y con un estilo visual impactante, adecuada para estudios de tatuajes que quieran mostrar su trabajo de forma profesional.
 
-Follow these steps:
+
+🛠 Tecnologías utilizadas
+
+El desarrollo del sitio se ha realizado con:
+
+React
+
+TypeScript
+
+Vite
+
+Tailwind CSS
+
+shadcn/ui (componentes estilizados)
+
+Estas tecnologías garantizan un sitio moderno, fácil de mantener y con un rendimiento excelente.
+
+
+🚀 Ejecución en local
+
+Para revisar, modificar o mantener el proyecto:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Clonar el repositorio
+git clone <URL_DEL_REPO>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Acceder al directorio
+cd INKED_STUDIO
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Instalar dependencias
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Ejecutar en modo desarrollo
 npm run dev
 ```
+Esto abrirá la web en el navegador con recarga automática al editar.
 
-**Edit a file directly in GitHub**
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+🏭 Build de producción
 
-**Use GitHub Codespaces**
+Para generar la versión final que se subirá al hosting del cliente:
+```sh
+npm run build
+```
+Esto generará la carpeta dist/ con todos los archivos optimizados.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-## What technologies are used for this project?
+🌐 Despliegue
 
-This project is built with:
+Los archivos de la carpeta dist/ pueden instalarse en:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Vercel
 
-## How can I deploy this project?
+Netlify
 
-Simply open [Lovable](https://lovable.dev/projects/5c37b46a-58bf-4c8a-a8fb-f407cf452e4c) and click on Share -> Publish.
+cPanel u otros hostings clásicos
 
-## Can I connect a custom domain to my Lovable project?
+VPS o servidores privados
 
-Yes, you can!
+Cualquier hosting compatible con sitios estáticos
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+El sitio no requiere backend para su funcionamiento.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+
+📌 Estado del proyecto
+
+El proyecto INKED_STUDIO está finalizado, estable y listo para ser entregado o desplegado.
+Puede ampliarse fácilmente con nuevas páginas, galerías, secciones de tatuadores o funcionalidades como reservas online.
