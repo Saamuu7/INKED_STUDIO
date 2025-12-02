@@ -4,6 +4,7 @@ import { Hero } from "@/components/Hero";
 import { Gallery } from "@/components/Gallery";
 import { Services } from "@/components/Services";
 import { BookingForm } from "@/components/BookingForm";
+import { AgendaBoard } from "@/components/AgendaBoard";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
@@ -16,9 +17,10 @@ const Index = () => {
       <main className="relative z-10">
         <WelcomeBanner />
         <Hero />
-        <Gallery />
         <Services />
+        <Gallery />
         <BookingForm />
+        <AgendaBoard />
         <Contact />
       </main>
       <Footer />

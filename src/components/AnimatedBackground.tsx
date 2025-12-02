@@ -1,5 +1,87 @@
 import { useEffect, useRef } from "react";
 
+class InkStroke {
+  private ctx: CanvasRenderingContext2D;
+  private canvas: HTMLCanvasElement;
+  private offset = Math.random() * 500;
+  private readonly speed = Math.random() * 0.6 + 0.2;
+  private readonly amplitude = Math.random() * 120 + 80;
+  private readonly thickness = Math.random() * 0.8 + 0.4;
+  private readonly baseY: number;
+  private readonly hue: number;
+
+  constructor(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, baseY: number, hue: number) {
+    this.ctx = ctx;
+    this.canvas = canvas;
+    this.baseY = baseY;
+    this.hue = hue;
+  }
+
+  update() {
+    this.offset += this.speed;
+  }
+
+  draw() {
+    const ctx = this.ctx;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(-200, this.baseY);
+
+    for (let x = -200; x <= this.canvas.width + 200; x += 40) {
+      const angle = (x + this.offset) / 140;
+      const y = this.baseY + Math.sin(angle) * this.amplitude;
+      ctx.lineTo(x, y);
+    }
+
+    ctx.strokeStyle = `hsla(${this.hue}, 70%, 55%, 0.08)`;
+    ctx.lineWidth = this.thickness;
+    ctx.shadowBlur = 40;
+    ctx.shadowColor = `hsla(${this.hue}, 80%, 50%, 0.25)`;
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+class InkSpark {
+  private ctx: CanvasRenderingContext2D;
+  private canvas: HTMLCanvasElement;
+  private x: number;
+  private y: number;
+  private readonly radius = Math.random() * 2 + 0.5;
+  private readonly hue = Math.random() > 0.5 ? 355 : 37;
+  private velocityX = (Math.random() - 0.5) * 0.3;
+  private velocityY = (Math.random() - 0.5) * 0.3;
+
+  constructor(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
+    this.ctx = ctx;
+    this.canvas = canvas;
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+  }
+
+  update() {
+    this.x += this.velocityX;
+    this.y += this.velocityY;
+
+    if (this.x < 0 || this.x > this.canvas.width) this.velocityX *= -1;
+    if (this.y < 0 || this.y > this.canvas.height) this.velocityY *= -1;
+  }
+
+  draw() {
+    const ctx = this.ctx;
+    const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius * 10);
+    gradient.addColorStop(0, `hsla(${this.hue}, 70%, 60%, 0.35)`);
+    gradient.addColorStop(1, "transparent");
+
+    ctx.save();
+    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius * 10, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
 export const AnimatedBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -11,105 +93,67 @@ export const AnimatedBackground = () => {
     if (!ctx) return;
 
     let animationId: number;
-    let particles: Particle[] = [];
+    let strokes: InkStroke[] = [];
+    let sparks: InkSpark[] = [];
 
-    const resize = () => {
+    const handleResize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      buildScene();
     };
 
-    class Particle {
-      x: number;
-      y: number;
-      size: number;
-      speedX: number;
-      speedY: number;
-      opacity: number;
+    const buildScene = () => {
+      strokes = [];
+      sparks = [];
 
-      constructor() {
-        this.x = Math.random() * canvas!.width;
-        this.y = Math.random() * canvas!.height;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = (Math.random() - 0.5) * 0.3;
-        this.speedY = (Math.random() - 0.5) * 0.3;
-        this.opacity = Math.random() * 0.5 + 0.1;
+      const strokeCount = Math.max(3, Math.floor(canvas.height / 260));
+      for (let i = 0; i < strokeCount; i++) {
+        const baseY = (canvas.height / (strokeCount + 1)) * (i + 1);
+        const hue = i % 2 === 0 ? 355 : 37;
+        strokes.push(new InkStroke(ctx, canvas, baseY, hue));
       }
 
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-
-        if (this.x < 0 || this.x > canvas!.width) this.speedX *= -1;
-        if (this.y < 0 || this.y > canvas!.height) this.speedY *= -1;
-      }
-
-      draw() {
-        if (!ctx) return;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(333, 71%, 50%, ${this.opacity})`;
-        ctx.fill();
-      }
-    }
-
-    const init = () => {
-      particles = [];
-      const particleCount = Math.floor((canvas.width * canvas.height) / 15000);
-      for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
+      const sparkCount = Math.floor((canvas.width * canvas.height) / 18000);
+      for (let i = 0; i < sparkCount; i++) {
+        sparks.push(new InkSpark(ctx, canvas));
       }
     };
 
-    const connectParticles = () => {
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 120) {
-            ctx.beginPath();
-            ctx.strokeStyle = `hsla(333, 71%, 50%, ${0.1 * (1 - distance / 120)})`;
-            ctx.lineWidth = 0.5;
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.stroke();
-          }
-        }
-      }
+    const drawBackdrop = () => {
+      const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      gradient.addColorStop(0, "hsla(220, 25%, 6%, 0.65)");
+      gradient.addColorStop(1, "hsla(355, 64%, 10%, 0.45)");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     };
 
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      particles.forEach((particle) => {
-        particle.update();
-        particle.draw();
+      drawBackdrop();
+
+      strokes.forEach((stroke) => {
+        stroke.update();
+        stroke.draw();
       });
 
-      connectParticles();
+      sparks.forEach((spark) => {
+        spark.update();
+        spark.draw();
+      });
+
       animationId = requestAnimationFrame(animate);
     };
 
-    resize();
-    init();
+    handleResize();
     animate();
 
-    window.addEventListener("resize", () => {
-      resize();
-      init();
-    });
+    window.addEventListener("resize", handleResize);
 
     return () => {
       cancelAnimationFrame(animationId);
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0 opacity-40"
-    />
-  );
+  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0 opacity-40" />;
 };

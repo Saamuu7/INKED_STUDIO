@@ -5,25 +5,31 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { MessageSquare, Send, Calendar, User, Phone, Mail, Sparkles } from "lucide-react";
+import { MessageSquare, Send, Calendar, User, Phone, Mail, Sparkles, Clock } from "lucide-react";
 
 interface FormData {
   nombre: string;
   email: string;
   telefono: string;
   fecha: string;
+  horaInicio: string;
+  horaFin: string;
   descripcion: string;
 }
 
+const initialFormState: FormData = {
+  nombre: "",
+  email: "",
+  telefono: "",
+  fecha: "",
+  horaInicio: "",
+  horaFin: "",
+  descripcion: "",
+};
+
 export const BookingForm = () => {
   const { toast } = useToast();
-  const [form, setForm] = useState<FormData>({
-    nombre: "",
-    email: "",
-    telefono: "",
-    fecha: "",
-    descripcion: "",
-  });
+  const [form, setForm] = useState<FormData>(initialFormState);
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -41,6 +47,11 @@ export const BookingForm = () => {
     const newErrors: Partial<FormData> = {};
     if (!form.nombre.trim()) newErrors.nombre = "Ingresa tu nombre.";
     if (!form.telefono.trim()) newErrors.telefono = "Ingresa un teléfono.";
+    if (!form.horaInicio.trim()) newErrors.horaInicio = "Indica hora de inicio.";
+    if (!form.horaFin.trim()) newErrors.horaFin = "Indica hora de fin.";
+    if (!newErrors.horaInicio && !newErrors.horaFin && form.horaInicio && form.horaFin && form.horaInicio >= form.horaFin) {
+      newErrors.horaFin = "La hora de fin debe ser posterior.";
+    }
     if (!form.descripcion.trim())
       newErrors.descripcion = "Cuéntanos la idea del tatuaje.";
     return newErrors;
@@ -61,13 +72,14 @@ export const BookingForm = () => {
     const reservas = JSON.parse(localStorage.getItem("reservas_tattoo") || "[]");
     reservas.unshift({ ...form, createdAt: new Date().toISOString() });
     localStorage.setItem("reservas_tattoo", JSON.stringify(reservas));
+    window.dispatchEvent(new Event("reservas:update"));
 
     toast({
       title: "¡Reserva recibida!",
       description: "Te contactaremos pronto por teléfono o WhatsApp.",
     });
 
-    setForm({ nombre: "", email: "", telefono: "", fecha: "", descripcion: "" });
+    setForm(initialFormState);
     setIsSubmitting(false);
   };
 
@@ -76,35 +88,29 @@ export const BookingForm = () => {
   )}`;
 
   return (
-    <section id="reservas" className="relative py-20 overflow-hidden">
-      {/* Background decorations */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/5 to-transparent pointer-events-none" />
-      <div className="absolute -top-40 -left-40 w-80 h-80 bg-primary/10 rounded-full blur-3xl" />
-      <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-accent/20 rounded-full blur-3xl" />
+    <section id="reservas" className="relative py-24 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-transparent" />
+      <div className="absolute -top-32 right-10 w-64 h-64 bg-secondary/10 rounded-full blur-3xl" />
+      <div className="absolute -bottom-24 left-10 w-48 h-48 bg-primary/15 rounded-full blur-3xl" />
 
-      <div className="max-w-4xl mx-auto px-4 relative z-10">
-        <div className="mb-12 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium mb-4">
-            <Calendar className="w-4 h-4 text-primary" />
-            <span>Agenda tu sesión</span>
-          </div>
-          <h3 className="text-3xl md:text-5xl font-bold">
-            Reserva tu <span className="text-gradient">cita</span>
-          </h3>
-          <p className="text-muted-foreground mt-4 text-lg max-w-2xl mx-auto">
-            Cuéntanos sobre tu idea y te confirmamos disponibilidad lo antes posible
+      <div className="max-w-5xl mx-auto px-4 relative z-10">
+        <div className="text-center space-y-4 mb-14">
+          <p className="section-subtitle text-secondary/80">Agenda</p>
+          <h3 className="text-3xl md:text-5xl font-semibold">Reserva tu ritual de tatuaje</h3>
+          <p className="text-muted max-w-3xl mx-auto">
+            Responde este formulario para que podamos asesorarte con disponibilidad, estimado de tiempo y recomendaciones previas a la sesión.
           </p>
         </div>
 
-        <Card className="glass border-primary/10 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
+        <Card className="glass border-border/40 overflow-hidden relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-secondary/10 via-transparent to-primary/10 pointer-events-none" />
           <CardHeader className="relative">
             <CardTitle className="flex items-center gap-2 text-2xl">
-              <Sparkles className="w-6 h-6 text-primary" />
-              Formulario de reserva
+              <Sparkles className="w-6 h-6 text-secondary" />
+              Agenda privada
             </CardTitle>
-            <CardDescription className="text-base">
-              Completa los datos y nos pondremos en contacto contigo en menos de 24 horas
+            <CardDescription className="text-base text-muted">
+              Respondemos en menos de 24h vía WhatsApp o llamada para confirmar detalles.
             </CardDescription>
           </CardHeader>
           <CardContent className="relative">
@@ -175,6 +181,42 @@ export const BookingForm = () => {
                     onChange={handleChange}
                     className="glass border-border/50 focus:border-primary"
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="horaInicio" className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-primary" />
+                    Hora inicio *
+                  </Label>
+                  <Input
+                    id="horaInicio"
+                    name="horaInicio"
+                    type="time"
+                    value={form.horaInicio}
+                    onChange={handleChange}
+                    className={`glass border-border/50 focus:border-primary ${errors.horaInicio ? "border-destructive" : ""}`}
+                  />
+                  {errors.horaInicio && (
+                    <p className="text-destructive text-sm">{errors.horaInicio}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="horaFin" className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-primary" />
+                    Hora fin *
+                  </Label>
+                  <Input
+                    id="horaFin"
+                    name="horaFin"
+                    type="time"
+                    value={form.horaFin}
+                    onChange={handleChange}
+                    className={`glass border-border/50 focus:border-primary ${errors.horaFin ? "border-destructive" : ""}`}
+                  />
+                  {errors.horaFin && (
+                    <p className="text-destructive text-sm">{errors.horaFin}</p>
+                  )}
                 </div>
 
                 <div className="md:col-span-2 space-y-2">

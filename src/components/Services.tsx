@@ -1,96 +1,85 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Palette, RefreshCw, Sparkles, Shield, Star, Zap } from "lucide-react";
+import { Brush, Layers, ShieldCheck, Sparkles, Star, Syringe } from "lucide-react";
+
+const services = [
+  {
+    icon: Brush,
+    title: "Custom Pieces",
+    description:
+      "Exploramos moodboards, ejecutamos bocetos digitales y ajustamos líneas y sombras hasta que la composición cuente tu historia.",
+    tag: "Hecho a medida",
+  },
+  {
+    icon: Layers,
+    title: "Cover-up & Restyling",
+    description:
+      "Rediseñamos tatuajes anteriores con técnicas de saturación, texturas y volúmenes que camuflan y elevan el resultado final.",
+    tag: "Transformación",
+  },
+  {
+    icon: Syringe,
+    title: "Piercing & Microtattoo",
+    description:
+      "Cabina estéril, agujas desechables y curación guiada. Ideal para piezas minimalistas y perforaciones de alta precisión.",
+    tag: "Detalle",
+  },
+];
+
+const commitments = [
+  { icon: ShieldCheck, label: "Bioseguridad certificada" },
+  { icon: Star, label: "Artistas residentes & guest" },
+  { icon: Sparkles, label: "Aftercare personalizado" },
+];
 
 export const Services = () => {
-  const services = [
-    {
-      icon: Palette,
-      title: "Tatuaje personalizado",
-      description: "Diseños únicos hechos a medida. Boceto previo, asesoría profesional y atención al detalle.",
-      highlight: "Popular",
-    },
-    {
-      icon: RefreshCw,
-      title: "Cover-up y retoques",
-      description: "Cubiertas artísticas y correcciones profesionales. Transformamos lo antiguo en arte nuevo.",
-      highlight: null,
-    },
-    {
-      icon: Sparkles,
-      title: "Piercing y cuidados",
-      description: "Colocación segura con materiales premium y recomendaciones post-procedimiento personalizadas.",
-      highlight: null,
-    },
-  ];
-
-  const features = [
-    { icon: Shield, text: "Higiene garantizada" },
-    { icon: Star, text: "Artistas certificados" },
-    { icon: Zap, text: "Equipos de última generación" },
-  ];
-
   return (
-    <section id="servicios" className="relative py-20 overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-muted/30 to-transparent pointer-events-none" />
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-      <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-
+    <section id="servicios" className="relative py-24 overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-transparent" />
       <div className="max-w-7xl mx-auto px-4 relative z-10">
-        <div className="mb-12 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium mb-4">
-            <Zap className="w-4 h-4 text-primary" />
-            <span>Profesionales expertos</span>
-          </div>
-          <h3 className="text-3xl md:text-5xl font-bold">
-            Nuestros <span className="text-gradient">servicios</span>
-          </h3>
-          <p className="text-muted-foreground mt-4 text-lg max-w-2xl mx-auto">
-            Ofrecemos una experiencia completa con los más altos estándares de calidad y seguridad
+        <div className="text-center space-y-4 mb-16">
+          <p className="section-subtitle text-secondary/80">SERVICIOS</p>
+          <h3 className="text-3xl md:text-5xl font-semibold">Curaduría de tatuajes y rituales de cuidado</h3>
+          <p className="text-muted max-w-3xl mx-auto">
+            Nuestra metodología combina arte, ciencia y comodidad para que vivas sesiones memorables. Estos son los programas que más reservan nuestros clientes.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          {services.map((service, i) => {
+        <div className="grid gap-6 md:grid-cols-3">
+          {services.map((service) => {
             const Icon = service.icon;
             return (
-              <Card
-                key={i}
-                className="group relative overflow-hidden glass border-primary/10 hover:border-primary/30 transition-all duration-500 hover:-translate-y-2"
-              >
-                {service.highlight && (
-                  <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-medium">
-                    {service.highlight}
+              <Card key={service.title} className="relative overflow-hidden border-border/40 bg-black/40">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-secondary/40 to-transparent" />
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="w-14 h-14 rounded-2xl border border-border/50 flex items-center justify-center">
+                      <Icon className="w-6 h-6 text-secondary" />
+                    </div>
+                    <div>
+                      <CardTitle>{service.title}</CardTitle>
+                      <span className="text-xs uppercase tracking-[0.4em] text-secondary/80">{service.tag}</span>
+                    </div>
                   </div>
-                )}
-                <CardHeader className="pb-4">
-                  <div className="w-14 h-14 bg-gradient-to-br from-primary to-accent-foreground text-primary-foreground rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
-                    <Icon className="w-7 h-7" />
-                  </div>
-                  <CardTitle className="text-xl">{service.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-base leading-relaxed">
+                  <CardDescription className="text-base text-muted leading-relaxed">
                     {service.description}
                   </CardDescription>
                 </CardContent>
-                {/* Hover glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               </Card>
             );
           })}
         </div>
 
-        {/* Features bar */}
-        <div className="flex flex-wrap justify-center gap-8 pt-8 border-t border-border/50">
-          {features.map((feature, i) => {
-            const Icon = feature.icon;
+        <div className="mt-16 grid md:grid-cols-3 gap-6">
+          {commitments.map((item) => {
+            const Icon = item.icon;
             return (
-              <div key={i} className="flex items-center gap-3 text-muted-foreground">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Icon className="w-5 h-5 text-primary" />
+              <div key={item.label} className="flex items-center gap-4 border border-border/40 rounded-2xl p-4 bg-black/30">
+                <div className="w-12 h-12 rounded-full border border-border/40 flex items-center justify-center">
+                  <Icon className="w-5 h-5 text-secondary" />
                 </div>
-                <span className="font-medium">{feature.text}</span>
+                <p className="text-sm uppercase tracking-[0.3em] text-muted">{item.label}</p>
               </div>
             );
           })}

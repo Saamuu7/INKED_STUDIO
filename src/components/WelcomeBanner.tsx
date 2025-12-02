@@ -1,57 +1,88 @@
-import { ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ChevronDown, Sparkles, Video } from "lucide-react";
+
+const stats = [
+	{ label: "Años tatuando", value: "+12" },
+	{ label: "Clientes felices", value: "3.5K" },
+	{ label: "Estilos dominados", value: "9" },
+];
 
 export const WelcomeBanner = () => {
-  const handleScrollDown = () => {
-    const heroSection = document.getElementById("inicio");
-    heroSection?.scrollIntoView({ behavior: "smooth" });
-  };
+	const handleScrollDown = () => {
+		const heroSection = document.getElementById("experiencia");
+		heroSection?.scrollIntoView({ behavior: "smooth" });
+	};
 
-  return (
-    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
-      <div className="absolute inset-0">
-        <img
-          src="https://images.unsplash.com/photo-1598371611186-ccae61a2f93e?q=80&w=1920"
-          alt="Estudio de tatuajes"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background" />
-      </div>
+	return (
+		<section id="inicio" className="relative min-h-screen w-full flex items-center overflow-hidden py-12">
+			<div className="absolute inset-0">
+				<img
+					src="https://images.unsplash.com/photo-1601572592091-3a8153fe8c46?q=80&w=1920"
+					alt="Artista tatuando un brazo"
+					className="w-full h-full object-cover"
+					loading="eager"
+				/>
+				<div className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/70 to-black/90" />
+				<div className="noise-overlay" />
+			</div>
 
-      {/* Content */}
-      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        <div className="space-y-6 opacity-0 animate-fade-in">
-          <p className="text-primary font-medium tracking-widest uppercase text-sm md:text-base">
-            Bienvenido a
-          </p>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight">
-            <span className="text-gradient">Ink Studio</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto font-light">
-            Donde el arte cobra vida en tu piel
-          </p>
-        </div>
-      </div>
+			<div className="relative z-10 max-w-6xl mx-auto px-4 flex flex-col gap-8">
+				<p className="text-sm md:text-base uppercase tracking-[0.6em] text-secondary/80 flex items-center gap-3">
+					<span className="w-12 h-px bg-gradient-to-r from-transparent via-secondary/60 to-secondary" />
+					Tattoo atelier contemporáneo
+				</p>
 
-      {/* Scroll Indicator */}
-      <button
-        onClick={handleScrollDown}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground hover:text-primary transition-colors cursor-pointer group"
-        aria-label="Scroll down"
-      >
-        <span className="text-sm font-medium tracking-wider uppercase opacity-0 animate-fade-in" style={{ animationDelay: '0.5s' }}>
-          Explorar
-        </span>
-        <div className="w-10 h-10 rounded-full border-2 border-current flex items-center justify-center opacity-0 animate-fade-in group-hover:border-primary" style={{ animationDelay: '0.6s' }}>
-          <ChevronDown className="w-5 h-5 animate-bounce" />
-        </div>
-      </button>
+				<div className="space-y-6">
+					<h1 className="text-4xl md:text-6xl lg:text-7xl leading-tight font-semibold">
+						Marcamos historias con trazos de <span className="text-gradient">tinta consciente</span>
+					</h1>
+					<p className="text-lg md:text-xl text-muted max-w-3xl">
+						Diseños hechos a medida, higiene quirúrgica y un proceso creativo guiado por artistas que viven el tatuaje como ritual.
+						Trae tu idea, nosotros la elevamos.
+					</p>
+				</div>
 
-      {/* Decorative corners */}
-      <div className="absolute top-8 left-8 w-16 h-16 border-l-2 border-t-2 border-primary/30 opacity-0 animate-fade-in" style={{ animationDelay: '0.3s' }} />
-      <div className="absolute top-8 right-8 w-16 h-16 border-r-2 border-t-2 border-primary/30 opacity-0 animate-fade-in" style={{ animationDelay: '0.3s' }} />
-      <div className="absolute bottom-8 left-8 w-16 h-16 border-l-2 border-b-2 border-primary/30 opacity-0 animate-fade-in" style={{ animationDelay: '0.3s' }} />
-      <div className="absolute bottom-8 right-8 w-16 h-16 border-r-2 border-b-2 border-primary/30 opacity-0 animate-fade-in" style={{ animationDelay: '0.3s' }} />
-    </section>
-  );
+				<div className="flex flex-wrap gap-4">
+					<Button size="lg" className="uppercase tracking-[0.4em]">
+						<a href="#reservas" className="flex items-center gap-3">
+							<Sparkles className="w-5 h-5" />
+							Reserva tu cita
+						</a>
+					</Button>
+					<Button
+						size="lg"
+						variant="outline"
+						className="border-secondary/80 text-secondary hover:bg-secondary/10 uppercase tracking-[0.3em]"
+						asChild
+					>
+						<a href="#galeria" className="flex items-center gap-3">
+							<Video className="w-5 h-5" />
+							Ver portafolio
+						</a>
+					</Button>
+				</div>
+
+				<div className="grid grid-cols-3 gap-4 max-w-2xl">
+					{stats.map((stat) => (
+						<div key={stat.label} className="border border-border/60 rounded-2xl p-4 text-center bg-black/30">
+							<p className="text-3xl font-semibold text-secondary">{stat.value}</p>
+							<p className="text-xs uppercase tracking-[0.4em] text-muted-foreground">{stat.label}</p>
+						</div>
+					))}
+				</div>
+			</div>
+
+			<button
+				onClick={handleScrollDown}
+				className="absolute bottom-10 left-1/2 -translate-x-1/2 text-muted-foreground hover:text-secondary transition-colors flex flex-col items-center gap-3"
+				aria-label="Desplazar hacia experiencia"
+			>
+				<span className="text-xs uppercase tracking-[0.4em]">Explorar estudio</span>
+				<div className="w-10 h-10 rounded-full border border-current flex items-center justify-center">
+					<ChevronDown className="w-5 h-5 animate-bounce" />
+				</div>
+			</button>
+		</section>
+	);
 };
+
