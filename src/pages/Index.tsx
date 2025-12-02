@@ -5,12 +5,14 @@ import { Services } from "@/components/Services";
 import { BookingForm } from "@/components/BookingForm";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
+import { AnimatedBackground } from "@/components/AnimatedBackground";
 
 const Index = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
+      <AnimatedBackground />
       <Header />
-      <main>
+      <main className="relative z-10">
         <Hero />
         <Gallery />
         <Services />
