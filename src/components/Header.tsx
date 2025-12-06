@@ -8,7 +8,6 @@ export const Header = () => {
     { href: "#experiencia", label: "Experiencia" },
     { href: "#servicios", label: "Servicios" },
     { href: "#galeria", label: "Galería" },
-    { href: "#reservas", label: "Reservas" },
     { href: "#contacto", label: "Contacto" },
   ];
 

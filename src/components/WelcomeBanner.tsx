@@ -14,7 +14,7 @@ export const WelcomeBanner = () => {
 	};
 
 	return (
-		<section id="inicio" className="relative min-h-screen w-full flex items-center overflow-hidden py-12">
+		<section id="inicio" className="relative min-h-screen w-full flex items-center overflow-hidden pt-32 pb-24">
 			<div className="absolute inset-0">
 				<img
 					src="https://images.unsplash.com/photo-1601572592091-3a8153fe8c46?q=80&w=1920"
@@ -74,7 +74,7 @@ export const WelcomeBanner = () => {
 
 			<button
 				onClick={handleScrollDown}
-				className="absolute bottom-10 left-1/2 -translate-x-1/2 text-muted-foreground hover:text-secondary transition-colors flex flex-col items-center gap-3"
+				className="absolute bottom-4 left-1/2 -translate-x-1/2 text-muted-foreground hover:text-secondary transition-colors flex flex-col items-center gap-3"
 				aria-label="Desplazar hacia experiencia"
 			>
 				<span className="text-xs uppercase tracking-[0.4em]">Explorar estudio</span>
